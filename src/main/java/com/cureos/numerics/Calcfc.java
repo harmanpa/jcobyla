@@ -26,17 +26,18 @@ package com.cureos.numerics;
 
 /**
  * Interface for calculation of objective function and constraints in COBYLA2 optimization.
- * 
+ *
  * @author Anders Gustafsson, Cureos AB.
  */
 public interface Calcfc {
     /**
      * The objective and constraints function evaluation method used in COBYLA2 minimization.
-     * @param n Number of variables.
-     * @param m Number of constraints.
-     * @param x Variable values to be employed in function and constraints calculation.
+     *
+     * @param n   Number of variables.
+     * @param m   Number of constraints.
+     * @param x   Variable values to be employed in function and constraints calculation.
      * @param con Calculated function values of the constraints.
      * @return Calculated objective function value.
      */
-    double Compute(int n, int m, double[] x, double[] con);
+    double compute(int n, int m, double[] x, double[] con);
 }

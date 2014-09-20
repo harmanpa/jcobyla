@@ -26,22 +26,22 @@ package com.cureos.numerics;
 
 /**
  * Enumeration of exit statuses associated with COBYLA2 optimization.
- * 
+ *
  * @author Anders Gustafsson, Cureos AB.
  */
 public enum CobylaExitStatus {
     /**
      * Optimization successfully completed.
      */
-    Normal,
-    
+    NORMAL,
+
     /**
      * Maximum number of iterations (function/constraints evaluations) reached during optimization.
      */
-    MaxIterationsReached,
-    
+    MAX_ITERATIONS_REACHED,
+
     /**
      * Size of rounding error is becoming damaging, terminating prematurely.
      */
-    DivergingRoundingErrors
+    DIVERGING_ROUNDING_ERRORS
 }
