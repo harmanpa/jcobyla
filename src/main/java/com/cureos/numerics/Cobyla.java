@@ -42,12 +42,18 @@ package com.cureos.numerics;
  */
 public class Cobyla {
 
-    private Cobyla() {
-    }
+    private Calcfc calcfc;
+    private int n;
+    private int m;
+    private double[] x;
+    private double rhobeg = 0.5;
+    private double rhoend = 1.0e-6;
+    private int iprint = 1;
+    private int maxfun = 3500;
+
 
     /**
-     * Minimizes the objective function F with respect to a set of inequality constraints CON,
-     * and returns the optimal variable array. F and CON may be non-linear, and should preferably be smooth.
+     * The main constructor for the cobyla optimization
      *
      * @param calcfc Interface implementation for calculating objective function and constraints.
      * @param n      Number of variables.
@@ -59,11 +65,43 @@ public class Cobyla {
      * @param iprint Print level, 0 &lt;= iprint &lt;= 3, where 0 provides no output and
      *               3 provides full output to the console.
      * @param maxfun Maximum number of function evaluations before terminating.
+     */
+    public Cobyla(final Calcfc calcfc,
+                  int n, int m, double[] x, double rhobeg, double rhoend, int iprint, int maxfun) {
+        this.calcfc = calcfc;
+        this.n = n;
+        this.m = m;
+        this.x = x;
+        this.rhobeg = rhobeg;
+        this.rhoend = rhoend;
+        this.iprint = iprint;
+        this.maxfun = maxfun;
+    }
+
+    /**
+     * A constructor for the cobyla optimization
+     *
+     * @param calcfc Interface implementation for calculating objective function and constraints.
+     * @param n      Number of variables.
+     * @param m      Number of constraints.
+     * @param x      On input initial values of the variables (zero-based array). On output
+     *               optimal values of the variables obtained in the COBYLA minimization.
+     */
+    public Cobyla(final Calcfc calcfc, int n, int m, double[] x) {
+        this.calcfc = calcfc;
+        this.n = n;
+        this.m = m;
+        this.x = x;
+    }
+
+
+    /**
+     * Minimizes the objective function F with respect to a set of inequality constraints CON,
+     * and returns the optimal variable array. F and CON may be non-linear, and should preferably be smooth.
+     *
      * @return Exit status of the COBYLA2 optimization.
      */
-
-
-    public static CobylaExitStatus findMinimum(final Calcfc calcfc, int n, int m, double[] x, double rhobeg, double rhoend, int iprint, int maxfun) {
+    public CobylaExitStatus findMinimum() {
         //     This subroutine minimizes an objective function F(X) subject to M
         //     inequality constraints on X, where X is a vector of variables that has
         //     N components.  The algorithm employs linear approximations to the
@@ -143,14 +181,14 @@ public class Cobyla {
             }
         };
 
-        CobylaExitStatus status = cobylb(fcalcfc, n, m, mpp, iox, rhobeg, rhoend, iprint, maxfun);
+
+        CobylaExitStatus status = cobylb(fcalcfc, mpp, iox);
         System.arraycopy(iox, 1, x, 0, n);
 
         return status;
     }
 
-    private static CobylaExitStatus cobylb(Calcfc calcfc, int n, int m, int mpp, double[] x,
-                                           double rhobeg, double rhoend, int iprint, int maxfun) {
+    private CobylaExitStatus cobylb(Calcfc calcfc, int mpp, double[] x) {
         // N.B. Arguments CON, SIM, SIMI, DATMAT, A, VSIG, VETA, SIGBAR, DX, W & IACT
         //      have been removed.
 
@@ -225,13 +263,14 @@ public class Cobyla {
             ++nfvals;
 
             f = calcfc.compute(n, m, x, con);
+
             resmax = 0.0;
             for (int k = 1; k <= m; ++k) {
                 resmax = Math.max(resmax, -con[k]);
             }
 
             if (nfvals == iprint - 1 || iprint == 3) {
-                printIterationResult(nfvals, f, resmax, x, n);
+                printIterationResult(nfvals, f, resmax, x);
             }
 
             con[mp] = f;
@@ -450,7 +489,7 @@ public class Cobyla {
                         //     Calculate DX = x(*)-x(0).
                         //     Branch if the length of DX is less than 0.5*RHO.
 
-                        ifull = trstlp(n, m, a, con, rho, dx);
+                        ifull = trstlp(a, con, rho, dx);
                         if (!ifull) {
                             temp = 0.0;
                             for (int k = 1; k <= n; ++k) {
@@ -629,7 +668,7 @@ public class Cobyla {
                     System.out.format("%nReduction in RHO to %1$13.6f  and PARMU = %2$13.6f%n", rho, parmu);
                 }
                 if (iprint == 2) {
-                    printIterationResult(nfvals, datmat[mp][np], datmat[mpp][np], col(sim, np), n);
+                    printIterationResult(nfvals, datmat[mp][np], datmat[mpp][np], col(sim, np));
                 }
             } while (true);
         } while (true);
@@ -641,7 +680,7 @@ public class Cobyla {
                 }
                 if (ifull) {
                     if (iprint >= 1) {
-                        printIterationResult(nfvals, f, resmax, x, n);
+                        printIterationResult(nfvals, f, resmax, x);
                     }
                     return status;
                 }
@@ -666,13 +705,13 @@ public class Cobyla {
         f = datmat[mp][np];
         resmax = datmat[mpp][np];
         if (iprint >= 1) {
-            printIterationResult(nfvals, f, resmax, x, n);
+            printIterationResult(nfvals, f, resmax, x);
         }
 
         return status;
     }
 
-    private static boolean trstlp(int n, int m, double[][] a, double[] b, double rho, double[] dx) {
+    private boolean trstlp(double[][] a, double[] b, double rho, double[] dx) {
         // N.B. Arguments Z, ZDOTA, VMULTC, SDIRN, DXNEW, VMULTD & IACT have been removed.
 
         //     This subroutine calculates an N-component vector DX by applying the
@@ -1069,7 +1108,7 @@ public class Cobyla {
                     if (mcon == m) {
                         resold = resmax;
                         resmax = 0.0;
-                        for(int k = 1; k <= nact; ++k) {
+                        for (int k = 1; k <= nact; ++k) {
                             int kk = iact[k];
                             temp = b[kk] - dotProduct(part(col(a, kk), 1, n), part(dxnew, 1, n));
                             resmax = Math.max(resmax, temp);
@@ -1180,12 +1219,12 @@ public class Cobyla {
         return false;
     }
 
-    private static void printIterationResult(int nfvals, double f, double resmax, double[] x, int n) {
+    private void printIterationResult(int nfvals, double f, double resmax, double[] x) {
         System.out.format("%nNFVALS = %1$5d   F = %2$13.6f    MAXCV = %3$13.6e%n", nfvals, f, resmax);
         System.out.format("X = %s%n", format(part(x, 1, n)));
     }
 
-    private static double[] row(double[][] src, int rowidx) {
+    private double[] row(double[][] src, int rowidx) {
         int cols = src[0].length;
         double[] dest = new double[cols];
         for (int col = 0; col < cols; ++col) {
@@ -1194,7 +1233,7 @@ public class Cobyla {
         return dest;
     }
 
-    private static double[] col(double[][] src, int colidx) {
+    private double[] col(double[][] src, int colidx) {
         int rows = src.length;
         double[] dest = new double[rows];
         for (int row = 0; row < rows; ++row) {
@@ -1203,7 +1242,7 @@ public class Cobyla {
         return dest;
     }
 
-    private static double[] part(double[] src, int from, int to) {
+    private double[] part(double[] src, int from, int to) {
         double[] dest = new double[to - from + 1];
         int destidx = 0;
         for (int srcidx = from; srcidx <= to; ++srcidx, ++destidx) {
@@ -1212,7 +1251,7 @@ public class Cobyla {
         return dest;
     }
 
-    private static String format(double[] x) {
+    private String format(double[] x) {
         String fmt = "";
         for (int i = 0; i < x.length; ++i) {
             fmt = fmt + String.format("%13.6f", x[i]);
@@ -1226,5 +1265,21 @@ public class Cobyla {
             sum += lhs[i] * rhs[i];
         }
         return sum;
+    }
+
+    public void setMaxfun(int maxfun) {
+        this.maxfun = maxfun;
+    }
+
+    public void setIprint(int iprint) {
+        this.iprint = iprint;
+    }
+
+    public void setRhoend(double rhoend) {
+        this.rhoend = rhoend;
+    }
+
+    public void setRhobeg(double rhobeg) {
+        this.rhobeg = rhobeg;
     }
 }
