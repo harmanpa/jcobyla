@@ -40,7 +40,13 @@ package com.cureos.numerics;
  *
  * @author Anders Gustafsson, Cureos AB.
  */
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 public class Cobyla {
+
+    private static final Logger logger = LogManager.getLogger(Cobyla.class);
 
     private Calcfc calcfc;
     private int n;
@@ -152,6 +158,9 @@ public class Cobyla {
         //     ...,CON(M).  Note that we are trying to adjust X so that F(X) is as
         //     small as possible subject to the constraint functions being nonnegative.
 
+
+        logger.info("start with minimum search");
+
         // Local variables
         int mpp = m + 2;
 
@@ -184,6 +193,8 @@ public class Cobyla {
 
         CobylaExitStatus status = cobylb(fcalcfc, mpp, iox);
         System.arraycopy(iox, 1, x, 0, n);
+
+        logger.info("finish minimum search");
 
         return status;
     }
@@ -234,7 +245,7 @@ public class Cobyla {
         double[] w = new double[1 + n];
 
         if (iprint >= 2) {
-            System.out.format("%nThe initial value of RHO is %13.6f and PARMU is set to zero.%n", rho);
+            logger.info("The initial value of RHO is {} and PARMU is set to zero.", rho);
         }
 
         int nfvals = 0;
@@ -524,7 +535,7 @@ public class Cobyla {
                         if (parmu < 1.5 * barmu) {
                             parmu = 2.0 * barmu;
                             if (iprint >= 2) {
-                                System.out.format("%nIncrease in PARMU to %13.6f%n", parmu);
+                                logger.info("Increase in PARMU to {}", parmu);
                             }
                             double phi = datmat[mp][np] + parmu * datmat[mpp][np];
                             for (int j = 1; j <= n; ++j) {
@@ -665,7 +676,7 @@ public class Cobyla {
                     }
                 }
                 if (iprint >= 2) {
-                    System.out.format("%nReduction in RHO to %1$13.6f  and PARMU = %2$13.6f%n", rho, parmu);
+                    logger.info("Reduction in RHO to {}  and PARMU = {}", rho, parmu);
                 }
                 if (iprint == 2) {
                     printIterationResult(nfvals, datmat[mp][np], datmat[mpp][np], col(sim, np));
@@ -676,7 +687,7 @@ public class Cobyla {
         switch (status) {
             case NORMAL:
                 if (iprint >= 1) {
-                    System.out.format("%nNormal return from subroutine COBYLA%n");
+                    logger.info("Normal return from subroutine COBYLA");
                 }
                 if (ifull) {
                     if (iprint >= 1) {
@@ -687,12 +698,12 @@ public class Cobyla {
                 break;
             case MAX_ITERATIONS_REACHED:
                 if (iprint >= 1) {
-                    System.out.format("%nReturn from subroutine COBYLA because the MAXFUN limit has been reached.%n");
+                    logger.info("Return from subroutine COBYLA because the MAXFUN limit has been reached.");
                 }
                 break;
             case DIVERGING_ROUNDING_ERRORS:
                 if (iprint >= 1) {
-                    System.out.format("%nReturn from subroutine COBYLA because rounding errors are becoming damaging.%n");
+                    logger.info("Return from subroutine COBYLA because rounding errors are becoming damaging.");
                 }
                 break;
             default:
@@ -1220,8 +1231,8 @@ public class Cobyla {
     }
 
     private void printIterationResult(int nfvals, double f, double resmax, double[] x) {
-        System.out.format("%nNFVALS = %1$5d   F = %2$13.6f    MAXCV = %3$13.6e%n", nfvals, f, resmax);
-        System.out.format("X = %s%n", format(part(x, 1, n)));
+        logger.info("NFVALS = {}   F = {}    MAXCV = {}", nfvals, f, resmax);
+        logger.info("X = {}", format(part(x, 1, n)));
     }
 
     private double[] row(double[][] src, int rowidx) {
@@ -1259,13 +1270,14 @@ public class Cobyla {
         return fmt;
     }
 
-    private static double dotProduct(double[] lhs, double[] rhs) {
+    private double dotProduct(double[] lhs, double[] rhs) {
         double sum = 0.0;
         for (int i = 0; i < lhs.length; ++i) {
             sum += lhs[i] * rhs[i];
         }
         return sum;
     }
+
 
     public void setMaxfun(int maxfun) {
         this.maxfun = maxfun;

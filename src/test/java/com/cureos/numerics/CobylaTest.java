@@ -26,6 +26,8 @@ package com.cureos.numerics;
 
 
 import org.junit.Test;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -35,6 +37,8 @@ import static org.junit.Assert.assertArrayEquals;
  * @author Anders Gustafsson, Cureos AB.
  */
 public class CobylaTest {
+
+    private static final Logger logger = LogManager.getLogger(CobylaTest.class);
 
     // FIELDS
     private double rhobeg = 0.5;
@@ -49,7 +53,7 @@ public class CobylaTest {
      */
     @Test
     public void test01FindMinimum() {
-        System.out.format("%nOutput from test problem 1 (Simple quadratic)%n");
+        logger.info("Output from test problem 1 (Simple quadratic)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -67,7 +71,7 @@ public class CobylaTest {
      */
     @Test
     public void test02FindMinimum() {
-        System.out.format("%nOutput from test problem 2 (2D unit circle calculation)%n");
+        logger.info("Output from test problem 2 (2D unit circle calculation)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -87,7 +91,7 @@ public class CobylaTest {
      */
     @Test
     public void test03FindMinimum() {
-        System.out.format("%nOutput from test problem 3 (3D ellipsoid calculation)%n");
+        logger.info("Output from test problem 3 (3D ellipsoid calculation)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -106,7 +110,7 @@ public class CobylaTest {
      */
     @Test
     public void test04FindMinimum() {
-        System.out.format("%nOutput from test problem 4 (Weak Rosenbrock)%n");
+        logger.info("Output from test problem 4 (Weak Rosenbrock)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -124,7 +128,7 @@ public class CobylaTest {
      */
     @Test
     public void test05FindMinimum() {
-        System.out.format("%nOutput from test problem 5 (Intermediate Rosenbrock)%n");
+        logger.info("Output from test problem 5 (Intermediate Rosenbrock)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -143,7 +147,7 @@ public class CobylaTest {
      */
     @Test
     public void test06FindMinimum() {
-        System.out.format("%nOutput from test problem 6 (Equation (9.1.15) in Fletcher's book)%n");
+        logger.info("Output from test problem 6 (Equation (9.1.15) in Fletcher's book)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -164,7 +168,7 @@ public class CobylaTest {
      */
     @Test
     public void test07FindMinimum() {
-        System.out.format("%nOutput from test problem 7 (Equation (14.4.2) in Fletcher)%n");
+        logger.info("Output from test problem 7 (Equation (14.4.2) in Fletcher)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -187,7 +191,7 @@ public class CobylaTest {
      */
     @Test
     public void test08FindMinimum() {
-        System.out.format("%nOutput from test problem 8 (Rosen-Suzuki)%n");
+        logger.info("Output from test problem 8 (Rosen-Suzuki)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -211,7 +215,7 @@ public class CobylaTest {
      */
     @Test
     public void test09FindMinimum() {
-        System.out.format("%nOutput from test problem 9 (Hock and Schittkowski 100)%n");
+        logger.info("Output from test problem 9 (Hock and Schittkowski 100)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -238,7 +242,7 @@ public class CobylaTest {
      */
     @Test
     public void test10FindMinimum() {
-        System.out.format("%nOutput from test problem 10 (Hexagon area)%n");
+        logger.info("Output from test problem 10 (Hexagon area)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
