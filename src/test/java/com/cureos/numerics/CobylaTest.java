@@ -38,7 +38,7 @@ import static org.junit.Assert.assertArrayEquals;
  */
 public class CobylaTest {
 
-    private static final Logger logger = LogManager.getLogger(CobylaTest.class);
+    private static final Logger LOGGER = LogManager.getLogger(CobylaTest.class);
 
     // FIELDS
     private double rhobeg = 0.5;
@@ -53,7 +53,7 @@ public class CobylaTest {
      */
     @Test
     public void test01FindMinimum() {
-        logger.info("Output from test problem 1 (Simple quadratic)");
+        LOGGER.info("Output from test problem 1 (Simple quadratic)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -71,7 +71,7 @@ public class CobylaTest {
      */
     @Test
     public void test02FindMinimum() {
-        logger.info("Output from test problem 2 (2D unit circle calculation)");
+        LOGGER.info("Output from test problem 2 (2D unit circle calculation)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -91,7 +91,7 @@ public class CobylaTest {
      */
     @Test
     public void test03FindMinimum() {
-        logger.info("Output from test problem 3 (3D ellipsoid calculation)");
+        LOGGER.info("Output from test problem 3 (3D ellipsoid calculation)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -110,7 +110,7 @@ public class CobylaTest {
      */
     @Test
     public void test04FindMinimum() {
-        logger.info("Output from test problem 4 (Weak Rosenbrock)");
+        LOGGER.info("Output from test problem 4 (Weak Rosenbrock)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -128,7 +128,7 @@ public class CobylaTest {
      */
     @Test
     public void test05FindMinimum() {
-        logger.info("Output from test problem 5 (Intermediate Rosenbrock)");
+        LOGGER.info("Output from test problem 5 (Intermediate Rosenbrock)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -147,7 +147,7 @@ public class CobylaTest {
      */
     @Test
     public void test06FindMinimum() {
-        logger.info("Output from test problem 6 (Equation (9.1.15) in Fletcher's book)");
+        LOGGER.info("Output from test problem 6 (Equation (9.1.15) in Fletcher's book)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -168,7 +168,7 @@ public class CobylaTest {
      */
     @Test
     public void test07FindMinimum() {
-        logger.info("Output from test problem 7 (Equation (14.4.2) in Fletcher)");
+        LOGGER.info("Output from test problem 7 (Equation (14.4.2) in Fletcher)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -191,7 +191,7 @@ public class CobylaTest {
      */
     @Test
     public void test08FindMinimum() {
-        logger.info("Output from test problem 8 (Rosen-Suzuki)");
+        LOGGER.info("Output from test problem 8 (Rosen-Suzuki)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -215,7 +215,7 @@ public class CobylaTest {
      */
     @Test
     public void test09FindMinimum() {
-        logger.info("Output from test problem 9 (Hock and Schittkowski 100)");
+        LOGGER.info("Output from test problem 9 (Hock and Schittkowski 100)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {
@@ -242,7 +242,7 @@ public class CobylaTest {
      */
     @Test
     public void test10FindMinimum() {
-        logger.info("Output from test problem 10 (Hexagon area)");
+        LOGGER.info("Output from test problem 10 (Hexagon area)");
         Calcfc calcfc = new Calcfc() {
             @Override
             public double compute(int n, int m, double[] x, double[] con) {

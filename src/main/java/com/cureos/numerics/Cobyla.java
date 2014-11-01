@@ -46,7 +46,7 @@ import org.apache.logging.log4j.LogManager;
 
 public class Cobyla {
 
-    private static final Logger logger = LogManager.getLogger(Cobyla.class);
+    private static final Logger LOGGER = LogManager.getLogger(Cobyla.class);
 
     private Calcfc calcfc;
     private int n;
@@ -159,7 +159,7 @@ public class Cobyla {
         //     small as possible subject to the constraint functions being nonnegative.
 
 
-        logger.info("start with minimum search");
+        LOGGER.info("start with minimum search");
 
         // Local variables
         int mpp = m + 2;
@@ -194,7 +194,7 @@ public class Cobyla {
         CobylaExitStatus status = cobylb(fcalcfc, mpp, iox);
         System.arraycopy(iox, 1, x, 0, n);
 
-        logger.info("finish minimum search");
+        LOGGER.info("finish minimum search");
 
         return status;
     }
@@ -245,7 +245,7 @@ public class Cobyla {
         double[] w = new double[1 + n];
 
         if (iprint >= 2) {
-            logger.info("The initial value of RHO is {} and PARMU is set to zero.", rho);
+            LOGGER.info("The initial value of RHO is {} and PARMU is set to zero.", rho);
         }
 
         int nfvals = 0;
@@ -535,7 +535,7 @@ public class Cobyla {
                         if (parmu < 1.5 * barmu) {
                             parmu = 2.0 * barmu;
                             if (iprint >= 2) {
-                                logger.info("Increase in PARMU to {}", parmu);
+                                LOGGER.info("Increase in PARMU to {}", parmu);
                             }
                             double phi = datmat[mp][np] + parmu * datmat[mpp][np];
                             for (int j = 1; j <= n; ++j) {
@@ -676,7 +676,7 @@ public class Cobyla {
                     }
                 }
                 if (iprint >= 2) {
-                    logger.info("Reduction in RHO to {}  and PARMU = {}", rho, parmu);
+                    LOGGER.info("Reduction in RHO to {}  and PARMU = {}", rho, parmu);
                 }
                 if (iprint == 2) {
                     printIterationResult(nfvals, datmat[mp][np], datmat[mpp][np], col(sim, np));
@@ -687,7 +687,7 @@ public class Cobyla {
         switch (status) {
             case NORMAL:
                 if (iprint >= 1) {
-                    logger.info("Normal return from subroutine COBYLA");
+                    LOGGER.info("Normal return from subroutine COBYLA");
                 }
                 if (ifull) {
                     if (iprint >= 1) {
@@ -698,12 +698,12 @@ public class Cobyla {
                 break;
             case MAX_ITERATIONS_REACHED:
                 if (iprint >= 1) {
-                    logger.info("Return from subroutine COBYLA because the MAXFUN limit has been reached.");
+                    LOGGER.info("Return from subroutine COBYLA because the MAXFUN limit has been reached.");
                 }
                 break;
             case DIVERGING_ROUNDING_ERRORS:
                 if (iprint >= 1) {
-                    logger.info("Return from subroutine COBYLA because rounding errors are becoming damaging.");
+                    LOGGER.info("Return from subroutine COBYLA because rounding errors are becoming damaging.");
                 }
                 break;
             default:
@@ -1231,8 +1231,8 @@ public class Cobyla {
     }
 
     private void printIterationResult(int nfvals, double f, double resmax, double[] x) {
-        logger.info("NFVALS = {}   F = {}    MAXCV = {}", nfvals, f, resmax);
-        logger.info("X = {}", format(part(x, 1, n)));
+        LOGGER.info("NFVALS = {}   F = {}    MAXCV = {}", nfvals, f, resmax);
+        LOGGER.info("X = {}", format(part(x, 1, n)));
     }
 
     private double[] row(double[][] src, int rowidx) {
