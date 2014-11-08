@@ -61,31 +61,28 @@ public class Cobyla {
     /**
      * The main constructor for the cobyla optimization
      *
-     * @param calcfc Interface implementation for calculating objective function and constraints.
-     * @param n      Number of variables.
-     * @param m      Number of constraints.
-     * @param x      On input initial values of the variables (zero-based array). On output
-     *               optimal values of the variables obtained in the COBYLA minimization.
-     * @param rhobeg Initial size of the simplex.
-     * @param rhoend Final value of the simplex.
-     * @param iprint Print level, 0 &lt;= iprint &lt;= 3, where 0 provides no output and
-     *               3 provides full output to the console.
-     * @param maxfun Maximum number of function evaluations before terminating.
+     * @param calcfc  Interface implementation for calculating objective function and constraints.
+     * @param n       Number of variables.
+     * @param m       Number of constraints.
+     * @param x       On input initial values of the variables (zero-based array). On output
+     *                optimal values of the variables obtained in the COBYLA minimization.
+     * @param options the options for the optimization.
+     *
      */
     public Cobyla(final Calcfc calcfc,
-                  int n, int m, double[] x, double rhobeg, double rhoend, int iprint, int maxfun) {
+                  int n, int m, double[] x, CobylaOptions options) {
         this.calcfc = calcfc;
         this.n = n;
         this.m = m;
         this.x = x;
-        this.rhobeg = rhobeg;
-        this.rhoend = rhoend;
-        this.iprint = iprint;
-        this.maxfun = maxfun;
+        this.rhobeg = options.getRhobeg();
+        this.rhoend = options.getRhoend();
+        this.iprint = options.getIprint();
+        this.maxfun = options.getMaxfun();
     }
 
     /**
-     * A constructor for the cobyla optimization
+     * A constructor for the cobyla optimization with default options.
      *
      * @param calcfc Interface implementation for calculating objective function and constraints.
      * @param n      Number of variables.
@@ -1276,22 +1273,5 @@ public class Cobyla {
             sum += lhs[i] * rhs[i];
         }
         return sum;
-    }
-
-
-    public void setMaxfun(int maxfun) {
-        this.maxfun = maxfun;
-    }
-
-    public void setIprint(int iprint) {
-        this.iprint = iprint;
-    }
-
-    public void setRhoend(double rhoend) {
-        this.rhoend = rhoend;
-    }
-
-    public void setRhobeg(double rhobeg) {
-        this.rhobeg = rhobeg;
     }
 }

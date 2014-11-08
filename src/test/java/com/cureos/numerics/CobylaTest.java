@@ -40,11 +40,7 @@ public class CobylaTest {
 
     private static final Logger LOGGER = LogManager.getLogger(CobylaTest.class);
 
-    // FIELDS
-    private double rhobeg = 0.5;
-    private double rhoend = 1.0e-6;
-    private int iprint = 1;
-    private int maxfun = 3500;
+    private CobylaOptions options = new CobylaOptions();
 
     // TESTS
 
@@ -61,7 +57,7 @@ public class CobylaTest {
             }
         };
         double[] x = {1.0, 1.0};
-        Cobyla cobyla = new Cobyla(calcfc, 2, 0, x, rhobeg, rhoend, iprint, maxfun);
+        Cobyla cobyla = new Cobyla(calcfc, 2, 0, x, options);
         cobyla.findMinimum();
         assertArrayEquals(null, new double[]{-1.0, 0.0}, x, 1.0e-5);
     }
@@ -81,7 +77,7 @@ public class CobylaTest {
         };
         double[] x = {1.0, 1.0};
 
-        Cobyla cobyla = new Cobyla(calcfc, 2, 1, x, rhobeg, rhoend, iprint, maxfun);
+        Cobyla cobyla = new Cobyla(calcfc, 2, 1, x, options);
         cobyla.findMinimum();
         assertArrayEquals(null, new double[]{Math.sqrt(0.5), -Math.sqrt(0.5)}, x, 1.0e-5);
     }
@@ -100,7 +96,7 @@ public class CobylaTest {
             }
         };
         double[] x = {1.0, 1.0, 1.0};
-        Cobyla cobyla = new Cobyla(calcfc, 3, 1, x, rhobeg, rhoend, iprint, maxfun);
+        Cobyla cobyla = new Cobyla(calcfc, 3, 1, x, options);
         cobyla.findMinimum();
         assertArrayEquals(null, new double[]{1.0 / Math.sqrt(3.0), 1.0 / Math.sqrt(6.0), -1.0 / 3.0}, x, 1.0e-5);
     }
@@ -118,7 +114,7 @@ public class CobylaTest {
             }
         };
         double[] x = {1.0, 1.0};
-        Cobyla cobyla = new Cobyla(calcfc, 2, 0, x, rhobeg, rhoend, iprint, maxfun);
+        Cobyla cobyla = new Cobyla(calcfc, 2, 0, x, options);
         cobyla.findMinimum();
         assertArrayEquals(null, new double[]{-1.0, 1.0}, x, 1.0e-4);
     }
@@ -136,7 +132,7 @@ public class CobylaTest {
             }
         };
         double[] x = {1.0, 1.0};
-        Cobyla cobyla = new Cobyla(calcfc, 2, 0, x, rhobeg, rhoend, iprint, maxfun);
+        Cobyla cobyla = new Cobyla(calcfc, 2, 0, x, options);
         cobyla.findMinimum();
         assertArrayEquals(null, new double[]{-1.0, 1.0}, x, 3.0e-4);
     }
@@ -157,7 +153,7 @@ public class CobylaTest {
             }
         };
         double[] x = {1.0, 1.0};
-        Cobyla cobyla = new Cobyla(calcfc, 2, 2, x, rhobeg, rhoend, iprint, maxfun);
+        Cobyla cobyla = new Cobyla(calcfc, 2, 2, x, options);
         cobyla.findMinimum();
         assertArrayEquals(null, new double[]{Math.sqrt(0.5), Math.sqrt(0.5)}, x, 1.0e-5);
     }
@@ -179,7 +175,7 @@ public class CobylaTest {
             }
         };
         double[] x = {1.0, 1.0, 1.0};
-        Cobyla cobyla = new Cobyla(calcfc, 3, 3, x, rhobeg, rhoend, iprint, maxfun);
+        Cobyla cobyla = new Cobyla(calcfc, 3, 3, x, options);
         cobyla.findMinimum();
         assertArrayEquals(null, new double[]{0.0, -3.0, -3.0}, x, 1.0e-5);
     }
@@ -203,7 +199,7 @@ public class CobylaTest {
             }
         };
         double[] x = {1.0, 1.0, 1.0, 1.0};
-        Cobyla cobyla = new Cobyla(calcfc, 4, 3, x, rhobeg, rhoend, iprint, maxfun);
+        Cobyla cobyla = new Cobyla(calcfc, 4, 3, x, options);
         cobyla.findMinimum();
         assertArrayEquals(null, new double[]{0.0, 1.0, 2.0, -1.0}, x, 1.0e-5);
     }
@@ -229,7 +225,7 @@ public class CobylaTest {
             }
         };
         double[] x = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
-        Cobyla cobyla = new Cobyla(calcfc, 7, 4, x, rhobeg, rhoend, iprint, maxfun);
+        Cobyla cobyla = new Cobyla(calcfc, 7, 4, x, options);
         cobyla.findMinimum();
         assertArrayEquals(null,
                 new double[]{2.330499, 1.951372, -0.4775414, 4.365726, -0.624487, 1.038131, 1.594227}, x, 1.0e-5);
@@ -264,7 +260,7 @@ public class CobylaTest {
             }
         };
         double[] x = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
-        Cobyla cobyla = new Cobyla(calcfc, 9, 14, x, rhobeg, rhoend, iprint, maxfun);
+        Cobyla cobyla = new Cobyla(calcfc, 9, 14, x, options);
         cobyla.findMinimum();
         assertArrayEquals(null,
                 new double[]{x[0], x[1], x[2], x[3], x[0], x[1], x[2], x[3], 0.0}, x, 1.0e-4);
