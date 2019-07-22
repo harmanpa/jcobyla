@@ -27,20 +27,22 @@ package com.cureos.numerics;
 /**
  * Constrained Optimization BY Linear Approximation in Java.
  * <p/>
- * COBYLA2 is an implementation of Powell’s nonlinear derivative–free constrained optimization that uses
- * a linear approximation approach. The algorithm is a sequential trust–region algorithm that employs linear
- * approximations to the objective and constraint functions, where the approximations are formed by linear
- * interpolation at n + 1 points in the space of the variables and tries to maintain a regular–shaped simplex
- * over iterations.
+ * COBYLA2 is an implementation of Powell’s nonlinear derivative–free
+ * constrained optimization that uses a linear approximation approach. The
+ * algorithm is a sequential trust–region algorithm that employs linear
+ * approximations to the objective and constraint functions, where the
+ * approximations are formed by linear interpolation at n + 1 points in the
+ * space of the variables and tries to maintain a regular–shaped simplex over
+ * iterations.
  * <p/>
- * It solves nonsmooth NLP with a moderate number of variables (about 100). Inequality constraints only.
+ * It solves nonsmooth NLP with a moderate number of variables (about 100).
+ * Inequality constraints only.
  * <p/>
- * The initial point X is taken as one vertex of the initial simplex with zero being another, so, X should
- * not be entered as the zero vector.
+ * The initial point X is taken as one vertex of the initial simplex with zero
+ * being another, so, X should not be entered as the zero vector.
  *
  * @author Anders Gustafsson, Cureos AB.
  */
-
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -48,29 +50,30 @@ public class Cobyla {
 
     private static final Logger LOGGER = LogManager.getLogger(Cobyla.class);
 
-    private Calcfc calcfc;
-    private int n;
-    private int m;
-    private double[] x;
-    private double rhobeg = 0.5;
-    private double rhoend = 1.0e-6;
-    private int iprint = 1;
-    private int maxfun = 3500;
-
+    private final Calcfc calcfc;
+    private final int n;
+    private final int m;
+    private final double[] x;
+    private final double rhobeg;
+    private final double rhoend;
+    private final int iprint;
+    private final int maxfun;
 
     /**
      * The main constructor for the cobyla optimization
      *
-     * @param calcfc  Interface implementation for calculating objective function and constraints.
-     * @param n       Number of variables.
-     * @param m       Number of constraints.
-     * @param x       On input initial values of the variables (zero-based array). On output
-     *                optimal values of the variables obtained in the COBYLA minimization.
+     * @param calcfc Interface implementation for calculating objective function
+     * and constraints.
+     * @param n Number of variables.
+     * @param m Number of constraints.
+     * @param x On input initial values of the variables (zero-based array). On
+     * output optimal values of the variables obtained in the COBYLA
+     * minimization.
      * @param options the options for the optimization.
      *
      */
     public Cobyla(final Calcfc calcfc,
-                  int n, int m, double[] x, CobylaOptions options) {
+            int n, int m, double[] x, CobylaOptions options) {
         this.calcfc = calcfc;
         this.n = n;
         this.m = m;
@@ -84,23 +87,22 @@ public class Cobyla {
     /**
      * A constructor for the cobyla optimization with default options.
      *
-     * @param calcfc Interface implementation for calculating objective function and constraints.
-     * @param n      Number of variables.
-     * @param m      Number of constraints.
-     * @param x      On input initial values of the variables (zero-based array). On output
-     *               optimal values of the variables obtained in the COBYLA minimization.
+     * @param calcfc Interface implementation for calculating objective function
+     * and constraints.
+     * @param n Number of variables.
+     * @param m Number of constraints.
+     * @param x On input initial values of the variables (zero-based array). On
+     * output optimal values of the variables obtained in the COBYLA
+     * minimization.
      */
     public Cobyla(final Calcfc calcfc, int n, int m, double[] x) {
-        this.calcfc = calcfc;
-        this.n = n;
-        this.m = m;
-        this.x = x;
+        this(calcfc, n, m, x, new CobylaOptions());
     }
 
-
     /**
-     * Minimizes the objective function F with respect to a set of inequality constraints CON,
-     * and returns the optimal variable array. F and CON may be non-linear, and should preferably be smooth.
+     * Minimizes the objective function F with respect to a set of inequality
+     * constraints CON, and returns the optimal variable array. F and CON may be
+     * non-linear, and should preferably be smooth.
      *
      * @return Exit status of the COBYLA2 optimization.
      */
@@ -144,7 +146,6 @@ public class Cobyla {
         //     limit on the number of calls of CALCFC, the purpose of this routine being
         //     given below.  The value of ITERS will be altered to the number of calls
         //     of CALCFC that are made.
-
         //     In order to define the objective and constraint functions, we require
         //     a subroutine that has the name and arguments
         //                SUBROUTINE CALCFC (N,M,X,F,CON)
@@ -154,8 +155,6 @@ public class Cobyla {
         //     the objective and constraint functions at X in F and CON(1),CON(2),
         //     ...,CON(M).  Note that we are trying to adjust X so that F(X) is as
         //     small as possible subject to the constraint functions being nonnegative.
-
-
         LOGGER.info("start with minimum search");
 
         // Local variables
@@ -187,7 +186,6 @@ public class Cobyla {
             }
         };
 
-
         CobylaExitStatus status = cobylb(fcalcfc, mpp, iox);
         System.arraycopy(iox, 1, x, 0, n);
 
@@ -205,9 +203,7 @@ public class Cobyla {
         //     hold the displacements from the optimal vertex to the other vertices.
         //     Further, SIMI holds the inverse of the matrix that is contained in the
         //     first N columns of SIM.
-
         // Local variables
-
         CobylaExitStatus status;
 
         double alpha = 0.25;
@@ -260,7 +256,6 @@ public class Cobyla {
         //     Make the next call of the user-supplied subroutine CALCFC. These
         //     instructions are also used for calling CALCFC during the iterations of
         //     the algorithm.
-
         L_40:
         do {
             if (nfvals >= maxfun && nfvals > 0) {
@@ -289,7 +284,6 @@ public class Cobyla {
             //     each column being the values of the constraint functions (if any)
             //     followed by the objective function and the greatest constraint violation
             //     at the vertex.
-
             boolean skipVertexIdent = true;
             if (!ibrnch) {
                 skipVertexIdent = false;
@@ -354,7 +348,6 @@ public class Cobyla {
 
                         //     Switch the best vertex into pole position if it is not there already,
                         //     and also update SIM, SIMI and DATMAT.
-
                         if (nbest <= n) {
                             for (int i = 1; i <= mpp; ++i) {
                                 temp = datmat[i][np];
@@ -377,7 +370,6 @@ public class Cobyla {
 
                         //     Make an error return if SIGI is a poor approximation to the inverse of
                         //     the leading N by N submatrix of SIG.
-
                         double error = 0.0;
                         for (int i = 1; i <= n; ++i) {
                             for (int j = 1; j <= n; ++j) {
@@ -394,7 +386,6 @@ public class Cobyla {
                         //     and constraint functions, placing minus the objective function gradient
                         //     after the constraint gradients in the array A. The vector W is used for
                         //     working space.
-
                         for (int k = 1; k <= mp; ++k) {
                             con[k] = -datmat[k][np];
                             for (int j = 1; j <= n; ++j) {
@@ -408,7 +399,6 @@ public class Cobyla {
 
                         //     Calculate the values of sigma and eta, and set IFLAG = 0 if the current
                         //     simplex is not acceptable.
-
                         iflag = true;
                         parsig = alpha * rho;
                         double pareta = beta * rho;
@@ -431,7 +421,6 @@ public class Cobyla {
 
                         //     If a new vertex is needed to improve acceptability, then decide which
                         //     vertex to drop from the simplex.
-
                         if (!ibrnch && !iflag) {
                             jdrop = 0;
                             temp = pareta;
@@ -451,7 +440,6 @@ public class Cobyla {
                             }
 
                             //     Calculate the step to the new vertex and its sign.
-
                             temp = gamma * rho * vsig[jdrop];
                             for (int k = 1; k <= n; ++k) {
                                 dx[k] = temp * simi[jdrop][k];
@@ -471,7 +459,6 @@ public class Cobyla {
                             double dxsign = parmu * (cvmaxp - cvmaxm) > 2.0 * total ? -1.0 : 1.0;
 
                             //     Update the elements of SIM and SIMI, and set the next X.
-
                             temp = 0.0;
                             for (int i = 1; i <= n; ++i) {
                                 dx[i] = dxsign * dx[i];
@@ -496,7 +483,6 @@ public class Cobyla {
 
                         //     Calculate DX = x(*)-x(0).
                         //     Branch if the length of DX is less than 0.5*RHO.
-
                         ifull = trstlp(a, con, rho, dx);
                         if (!ifull) {
                             temp = 0.0;
@@ -511,7 +497,6 @@ public class Cobyla {
 
                         //     Predict the change to F and the new maximum constraint violation if the
                         //     variables are altered from x(0) to x(0) + DX.
-
                         total = 0.0;
                         double resnew = 0.0;
                         con[mp] = 0.0;
@@ -526,7 +511,6 @@ public class Cobyla {
                         //     optimal vertex. Otherwise PREREM and PREREC will be set to the predicted
                         //     reductions in the merit function and the maximum constraint violation
                         //     respectively.
-
                         prerec = datmat[mpp][np] - resnew;
                         double barmu = prerec > 0.0 ? total / prerec : 0.0;
                         if (parmu < 1.5 * barmu) {
@@ -546,7 +530,6 @@ public class Cobyla {
 
                         //     Calculate the constraint and objective functions at x(*).
                         //     Then find the actual reduction in the merit function.
-
                         for (int k = 1; k <= n; ++k) {
                             x[k] = sim[k][np] + dx[k];
                         }
@@ -567,7 +550,6 @@ public class Cobyla {
                     //     vertices of the current simplex, the change being mandatory if TRURED is
                     //     positive. Firstly, JDROP is set to the index of the vertex that is to be
                     //     replaced.
-
                     double ratio = trured <= 0.0 ? 1.0 : 0.0;
                     jdrop = 0;
                     for (int j = 1; j <= n; ++j) {
@@ -580,7 +562,6 @@ public class Cobyla {
                     }
 
                     //     Calculate the value of ell.
-
                     double edgmax = delta * rho;
                     int l = 0;
                     for (int j = 1; j <= n; ++j) {
@@ -627,7 +608,6 @@ public class Cobyla {
                         }
 
                         //     Branch back for further iterations with the current RHO.
-
                         if (trured > 0.0 && trured >= 0.1 * prerem) {
                             continue L_140;
                         }
@@ -645,7 +625,6 @@ public class Cobyla {
                 }
 
                 //     Otherwise reduce RHO if it is not at its least value and reset PARMU.
-
                 double cmin = 0.0, cmax = 0.0;
 
                 rho *= 0.5;
@@ -736,7 +715,6 @@ public class Cobyla {
         //     by MCON .EQ. M and MCON .GT. M respectively. It is possible that a
         //     degeneracy may prevent DX from attaining the target length RHO. Then the
         //     value IFULL = 0 would be set, but usually IFULL = 1 on return.
-
         //     In general NACT is the number of constraints in the active set and
         //     IACT(1),...,IACT(NACT) are their indices, while the remainder of IACT
         //     contains a permutation of the remaining constraint indices.  Further, Z
@@ -752,15 +730,12 @@ public class Cobyla {
         //     agreement with the permutation of the indices of the constraints that is
         //     in IACT. All these residuals are nonnegative, which is achieved by the
         //     shift RESMAX that makes the least residual zero.
-
         //     Initialize Z and some other variables. The value of RESMAX will be
         //     appropriate to DX = 0, while ICON will be the index of a most violated
         //     constraint if RESMAX is positive. Usually during the first stage the
         //     vector SDIRN gives a search direction that reduces all the active
         //     constraint violations by one simultaneously.
-
         // Local variables
-
         double temp;
 
         int nactx = 0;
@@ -801,7 +776,6 @@ public class Cobyla {
         //     function or to increase the number of active constraints since the best
         //     value was calculated. This strategy prevents cycling, but there is a
         //     remote possibility that it will cause premature termination.
-
         boolean first = true;
         do {
             L_60:
@@ -842,7 +816,6 @@ public class Cobyla {
                     //     of Z are orthogonal to the gradient of the new constraint, a scalar
                     //     product being set to zero if its nonzero value could be due to computer
                     //     rounding errors. The array DXNEW is used for working space.
-
                     double ratio;
                     if (icon <= nact) {
                         if (icon < nact) {
@@ -877,7 +850,6 @@ public class Cobyla {
 
                         //     If stage one is in progress, then set SDIRN to the direction of the next
                         //     change to the current vector of variables.
-
                         if (mcon > m) {
                             //     Pick the next search direction of stage two.
 
@@ -981,7 +953,6 @@ public class Cobyla {
                             //     Revise the Lagrange multipliers and reorder the active constraints so
                             //     that the one to be replaced is at the end of the list. Also calculate the
                             //     new value of ZDOTA(NACT) and branch if it is not acceptable.
-
                             for (int k = 1; k <= nact; ++k) {
                                 vmultc[k] = Math.max(0.0, vmultc[k] - ratio * vmultd[k]);
                             }
@@ -1029,7 +1000,6 @@ public class Cobyla {
 
                         //     Update IACT and ensure that the objective function continues to be
                         //     treated as the last active constraint when MCON>M.
-
                         iact[icon] = iact[nact];
                         iact[nact] = kk;
                         if (mcon > m && kk != mcon) {
@@ -1054,7 +1024,6 @@ public class Cobyla {
 
                         //     If stage one is in progress, then set SDIRN to the direction of the next
                         //     change to the current vector of variables.
-
                         if (mcon > m) {
                             //     Pick the next search direction of stage two.
 
@@ -1076,7 +1045,6 @@ public class Cobyla {
                     //     factor 1.0E-6 prevent some harmless underflows that occurred in a test
                     //     calculation. Further, we skip the step if it could be zero within a
                     //     reasonable tolerance for computer rounding errors.
-
                     double dd = rho * rho;
                     double sd = 0.0;
                     double ss = 0.0;
@@ -1109,7 +1077,6 @@ public class Cobyla {
                     //     RESMAX to the corresponding maximum residual if stage one is being done.
                     //     Because DXNEW will be changed during the calculation of some Lagrange
                     //     multipliers, it will be restored to the following value later.
-
                     for (int k = 1; k <= n; ++k) {
                         dxnew[k] = dx[k] + step * sdirn[k];
                     }
@@ -1127,7 +1094,6 @@ public class Cobyla {
                     //     device is included to force VMULTD(K) = 0.0 if deviations from this value
                     //     can be attributed to computer rounding errors. First calculate the new
                     //     Lagrange multipliers.
-
                     {
                         int k = nact;
                         do {
@@ -1157,7 +1123,6 @@ public class Cobyla {
                     }
 
                     //     Complete VMULTC by finding the new constraint residuals.
-
                     for (int k = 1; k <= n; ++k) {
                         dxnew[k] = dx[k] + step * sdirn[k];
                     }
@@ -1182,7 +1147,6 @@ public class Cobyla {
                     }
 
                     //     Calculate the fraction of the step from DX to DXNEW that will be taken.
-
                     ratio = 1.0;
                     icon = 0;
                     for (int k = 1; k <= mcon; ++k) {
@@ -1196,7 +1160,6 @@ public class Cobyla {
                     }
 
                     //     Update DX, VMULTC and RESMAX.
-
                     temp = 1.0 - ratio;
                     for (int k = 1; k <= n; ++k) {
                         dx[k] = temp * dx[k] + ratio * dxnew[k];
@@ -1210,7 +1173,6 @@ public class Cobyla {
 
                     //     If the full step is not acceptable then begin another iteration.
                     //     Otherwise switch to stage two or end the calculation.
-
                 } while (icon > 0);
 
                 if (step == stpful) {
@@ -1221,7 +1183,6 @@ public class Cobyla {
 
             //     We employ any freedom that may be available to reduce the objective
             //     function before returning a DX whose length is less than RHO.
-
         } while (mcon == m);
 
         return false;
