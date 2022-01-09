@@ -24,6 +24,9 @@
  */
 package com.cureos.numerics;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Constrained Optimization BY Linear Approximation in Java.
  * <p/>
@@ -43,12 +46,9 @@ package com.cureos.numerics;
  *
  * @author Anders Gustafsson, Cureos AB.
  */
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-
 public class Cobyla {
 
-    private static final Logger LOGGER = LogManager.getLogger(Cobyla.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Cobyla.class);
 
     private final Calcfc calcfc;
     private final int n;

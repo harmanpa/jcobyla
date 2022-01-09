@@ -24,12 +24,11 @@
  */
 package com.cureos.numerics;
 
-
 import org.junit.Test;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 import static org.junit.Assert.assertArrayEquals;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Test class for COBYLA2 employing tests from Report DAMTP 1992/NA5.
@@ -38,12 +37,11 @@ import static org.junit.Assert.assertArrayEquals;
  */
 public class CobylaTest {
 
-    private static final Logger LOGGER = LogManager.getLogger(CobylaTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CobylaTest.class);
 
     private CobylaOptions options = new CobylaOptions();
 
     // TESTS
-
     /**
      * Minimization of a simple quadratic function of two variables.
      */
@@ -194,8 +192,8 @@ public class CobylaTest {
                 con[0] = 8.0 - x[0] * x[0] - x[1] * x[1] - x[2] * x[2] - x[3] * x[3] - x[0] + x[1] - x[2] + x[3];
                 con[1] = 10.0 - x[0] * x[0] - 2.0 * x[1] * x[1] - x[2] * x[2] - 2.0 * x[3] * x[3] + x[0] + x[3];
                 con[2] = 5.0 - 2.0 * x[0] * x[0] - x[1] * x[1] - x[2] * x[2] - 2.0 * x[0] + x[1] + x[3];
-                return x[0] * x[0] + x[1] * x[1] + 2.0 * x[2] * x[2] + x[3] * x[3] - 5.0 * x[0] -
-                        5.0 * x[1] - 21.0 * x[2] + 7.0 * x[3];
+                return x[0] * x[0] + x[1] * x[1] + 2.0 * x[2] * x[2] + x[3] * x[3] - 5.0 * x[0]
+                        - 5.0 * x[1] - 21.0 * x[2] + 7.0 * x[3];
             }
         };
         double[] x = {1.0, 1.0, 1.0, 1.0};
@@ -205,9 +203,9 @@ public class CobylaTest {
     }
 
     /**
-     * This problem is taken from page 111 of Hock and Schittkowski's
-     * book Test Examples for Nonlinear Programming Codes. It is their
-     * test problem Number 100.
+     * This problem is taken from page 111 of Hock and Schittkowski's book Test
+     * Examples for Nonlinear Programming Codes. It is their test problem Number
+     * 100.
      */
     @Test
     public void test09FindMinimum() {
@@ -219,9 +217,9 @@ public class CobylaTest {
                 con[1] = 282.0 - 7.0 * x[0] - 3.0 * x[1] - 10.0 * x[2] * x[2] - x[3] + x[4];
                 con[2] = 196.0 - 23.0 * x[0] - x[1] * x[1] - 6.0 * x[5] * x[5] + 8.0 * x[6];
                 con[3] = -4.0 * x[0] * x[0] - x[1] * x[1] + 3.0 * x[0] * x[1] - 2.0 * x[2] * x[2] - 5.0 * x[5] + 11.0 * x[6];
-                return Math.pow(x[0] - 10.0, 2.0) + 5.0 * Math.pow(x[1] - 12.0, 2.0) + Math.pow(x[2], 4.0) +
-                        3.0 * Math.pow(x[3] - 11.0, 2.0) + 10.0 * Math.pow(x[4], 6.0) + 7.0 * x[5] * x[5] + Math.pow(x[6], 4.0) -
-                        4.0 * x[5] * x[6] - 10.0 * x[5] - 8.0 * x[6];
+                return Math.pow(x[0] - 10.0, 2.0) + 5.0 * Math.pow(x[1] - 12.0, 2.0) + Math.pow(x[2], 4.0)
+                        + 3.0 * Math.pow(x[3] - 11.0, 2.0) + 10.0 * Math.pow(x[4], 6.0) + 7.0 * x[5] * x[5] + Math.pow(x[6], 4.0)
+                        - 4.0 * x[5] * x[6] - 10.0 * x[5] - 8.0 * x[6];
             }
         };
         double[] x = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
@@ -233,8 +231,8 @@ public class CobylaTest {
 
     /**
      * This problem is taken from page 415 of Luenberger's book Applied
-     * Nonlinear Programming. It is to maximize the area of a hexagon of
-     * unit diameter.
+     * Nonlinear Programming. It is to maximize the area of a hexagon of unit
+     * diameter.
      */
     @Test
     public void test10FindMinimum() {
